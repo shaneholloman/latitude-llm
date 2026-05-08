@@ -348,6 +348,11 @@ function createTaskDefinition(
       secrets["google-oauth-client-secret"].arn,
       secrets["github-oauth-client-id"].arn,
       secrets["github-oauth-client-secret"].arn,
+      secrets["stripe-secret-key"].arn,
+      secrets["stripe-webhook-secret"].arn,
+      secrets["stripe-pro-price-id"].arn,
+      secrets["stripe-pro-overage-price-id"].arn,
+      secrets["stripe-pro-overage-meter-event-name"].arn,
       secrets["temporal-api-key"].arn,
       secrets["datadog-api-key"].arn,
       secrets["datadog-site"].arn,
@@ -355,6 +360,7 @@ function createTaskDefinition(
       secrets["latitude-telemetry-project-slug"].arn,
       secrets["turnstile-secret-key"].arn,
       secrets["posthog-api-key"].arn,
+      secrets["loops-api-key"].arn,
       secrets["v2-support-app-id"].arn,
       secrets["v2-support-app-secret-key"].arn,
       secrets["bull-board-username"].arn,
@@ -386,6 +392,11 @@ function createTaskDefinition(
         googleOauthClientSecretArn,
         githubOauthClientIdArn,
         githubOauthClientSecretArn,
+        stripeSecretKeyArn,
+        stripeWebhookSecretArn,
+        stripeProPriceIdArn,
+        stripeProOveragePriceIdArn,
+        stripeProOverageMeterEventNameArn,
         temporalApiKeyArn,
         datadogApiKeyArn,
         datadogSiteArn,
@@ -393,6 +404,7 @@ function createTaskDefinition(
         latitudeTelemetryProjectSlugArn,
         turnstileSecretKeyArn,
         posthogApiKeyArn,
+        loopsApiKeyArn,
         supportAppIdArn,
         supportAppSecretKeyArn,
         bullBoardUsernameArn,
@@ -466,6 +478,10 @@ function createTaskDefinition(
           // { name: "LAT_LATITUDE_TELEMETRY_PROJECT_SLUG", valueFrom: latitudeTelemetryProjectSlugArn },
           { name: "LAT_TURNSTILE_SECRET_KEY", valueFrom: turnstileSecretKeyArn },
           { name: "LAT_POSTHOG_API_KEY", valueFrom: posthogApiKeyArn },
+          // Loops sync is production-only. Injecting the placeholder secret in
+          // staging would defeat `loadLoopsConfig`'s "unset → no-op" gate and
+          // every marketing-contacts task would 401 against the Loops API.
+          ...(config.name === "production" ? [{ name: "LAT_LOOPS_API_KEY", valueFrom: loopsApiKeyArn }] : []),
         ]
 
         // Service-specific environment variables
@@ -502,6 +518,18 @@ function createTaskDefinition(
 
         const temporalSecret = { name: "LAT_TEMPORAL_API_KEY", valueFrom: temporalApiKeyArn }
 
+        const stripeSelfServeSecrets = [
+          { name: "LAT_STRIPE_SECRET_KEY", valueFrom: stripeSecretKeyArn },
+          { name: "LAT_STRIPE_WEBHOOK_SECRET", valueFrom: stripeWebhookSecretArn },
+          { name: "LAT_STRIPE_PRO_PRICE_ID", valueFrom: stripeProPriceIdArn },
+        ]
+
+        const stripeOverageSecrets = [
+          { name: "LAT_STRIPE_SECRET_KEY", valueFrom: stripeSecretKeyArn },
+          { name: "LAT_STRIPE_PRO_OVERAGE_PRICE_ID", valueFrom: stripeProOveragePriceIdArn },
+          { name: "LAT_STRIPE_PRO_OVERAGE_METER_EVENT_NAME", valueFrom: stripeProOverageMeterEventNameArn },
+        ]
+
         const bullBoardSecrets = [
           { name: "LAT_BULL_BOARD_USERNAME", valueFrom: bullBoardUsernameArn },
           { name: "LAT_BULL_BOARD_PASSWORD", valueFrom: bullBoardPasswordArn },
@@ -513,8 +541,8 @@ function createTaskDefinition(
         ]
 
         const serviceSpecificSecrets: Record<string, { name: string; valueFrom: string }[]> = {
-          web: [...oauthSecrets, temporalSecret, ...supportSecrets],
-          workflows: [temporalSecret],
+          web: [...oauthSecrets, ...stripeSelfServeSecrets, temporalSecret, ...supportSecrets],
+          workflows: [temporalSecret, ...stripeOverageSecrets],
           workers: [temporalSecret, ...bullBoardSecrets],
         }
 

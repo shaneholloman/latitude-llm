@@ -147,6 +147,11 @@ const issueTracesInputSchema = z.object({
   offset: z.number().int().min(0).optional(),
 })
 
+const issueTracesCountInputSchema = z.object({
+  projectId: z.string(),
+  issueId: z.string(),
+})
+
 const toUtcDayEnd = (value: Date): Date =>
   new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate(), 23, 59, 59, 999))
 
@@ -411,7 +416,8 @@ export const getIssueDetail = createServerFn({ method: "GET" })
           issue,
           states: deriveIssueLifecycleStates({
             issue,
-            occurrence,
+            isEscalating: issue.lifecycle.isEscalating,
+            isRegressed: issue.lifecycle.isRegressed,
             now,
           }),
           firstSeenAt: occurrence?.firstSeenAt ?? issue.createdAt,
@@ -500,6 +506,28 @@ export const listIssueTraces = createServerFn({ method: "GET" })
         withAi(AIEmbedLive, getRedisClient()),
         withTracing,
       ),
+    )
+  })
+
+export const countIssueTraces = createServerFn({ method: "GET" })
+  .inputValidator(issueTracesCountInputSchema)
+  .handler(async ({ data }): Promise<{ readonly total: number }> => {
+    const { organizationId } = await requireSession()
+    const orgId = OrganizationId(organizationId)
+    const chClient = getClickhouseClient()
+    const projectId = ProjectId(data.projectId)
+    const issueId = IssueId(data.issueId)
+
+    return Effect.runPromise(
+      Effect.gen(function* () {
+        const scoreAnalyticsRepository = yield* ScoreAnalyticsRepository
+        const total = yield* scoreAnalyticsRepository.countTracesByIssue({
+          organizationId: orgId,
+          projectId,
+          issueId,
+        })
+        return { total }
+      }).pipe(withClickHouse(ScoreAnalyticsRepositoryLive, chClient, orgId), withTracing),
     )
   })
 

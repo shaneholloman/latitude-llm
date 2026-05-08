@@ -70,6 +70,7 @@
           "telemetry/typescript",
           "telemetry/python",
           "telemetry/claude-code",
+          "telemetry/openclaw",
           {
             "group": "Providers",
             "pages": [
@@ -97,6 +98,7 @@
             "group": "Frameworks",
             "pages": [
               "telemetry/frameworks/vercel-ai-sdk",
+              "telemetry/frameworks/openai-agents",
               "telemetry/frameworks/langchain",
               "telemetry/frameworks/llamaindex",
               "telemetry/frameworks/mastra",

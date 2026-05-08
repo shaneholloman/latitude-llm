@@ -13,7 +13,14 @@ import { enqueueTracesExport } from "../../../../../domains/traces/traces.functi
 import { ListingLayout as Layout } from "../../../../../layouts/ListingLayout/index.tsx"
 import { toUserMessage } from "../../../../../lib/errors.ts"
 import { useParamState } from "../../../../../lib/hooks/useParamState.ts"
-import { EMPTY_SELECTION, type SelectionState } from "../../../../../lib/hooks/useSelectableRows.ts"
+import {
+  EMPTY_SELECTION,
+  getBulkSelection,
+  getSelectedCount,
+  type SelectionState,
+} from "../../../../../lib/hooks/useSelectableRows.ts"
+import { BreadcrumbText } from "../../../-components/breadcrumb-ui.tsx"
+import { AddToDatasetModal } from "../-components/add-to-dataset-modal.tsx"
 import { ColumnsSelector } from "../-components/columns-selector.tsx"
 import { ExportConfirmationModal } from "../-components/export-confirmation-modal.tsx"
 import { TRACE_COLUMN_OPTIONS, type TraceColumnId } from "../-components/project-traces-table.tsx"
@@ -22,21 +29,21 @@ import { TimeFilterDropdown } from "../-components/time-filter-dropdown.tsx"
 import { TraceDetailDrawer } from "../-components/trace-detail-drawer.tsx"
 import {
   DEFAULT_TRACE_SORTING,
-  getBulkSelection,
-  getSelectedCount,
   getTimeFilterValue,
   parseFilters,
   serializeFilters,
 } from "../-components/trace-page-state.ts"
 import { TracesView } from "../-components/traces-view.tsx"
 import { useRouteProject } from "../-route-data.ts"
-import { AddToDatasetModal } from "../datasets/-components/add-to-dataset-modal.tsx"
 import { SaveSearchModal } from "./-components/save-search-modal.tsx"
 import { SavedSearchesList } from "./-components/saved-searches-list.tsx"
 
 const SEARCH_QUERY_MAX_LENGTH = 500
 
 export const Route = createFileRoute("/_authenticated/projects/$projectSlug/search/")({
+  staticData: {
+    breadcrumb: () => <BreadcrumbText variant="current">Search</BreadcrumbText>,
+  },
   component: SearchPage,
 })
 
@@ -241,7 +248,7 @@ function SearchPage() {
               />
               <Button
                 variant={filtersOpen ? "outline" : "ghost"}
-                size="sm"
+                size="default"
                 onClick={() => setFiltersOpen(!filtersOpen)}
               >
                 <Icon icon={FilterIcon} size="sm" />
@@ -268,7 +275,7 @@ function SearchPage() {
               {loadedSavedSearch ? (
                 <SplitButton
                   variant="outline"
-                  size="sm"
+                  size="default"
                   disabled={!hasDrift}
                   isLoading={updateSavedSearchMutation.isPending}
                   actions={[
@@ -299,7 +306,7 @@ function SearchPage() {
                   ]}
                 />
               ) : (
-                <Button variant="outline" size="sm" onClick={() => setSaveModalOpen(true)}>
+                <Button variant="outline" size="default" onClick={() => setSaveModalOpen(true)}>
                   <Icon icon={PinIcon} size="sm" />
                   Save search
                 </Button>

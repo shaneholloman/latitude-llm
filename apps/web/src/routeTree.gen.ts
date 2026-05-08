@@ -25,6 +25,7 @@ import { Route as AuthInviteRouteImport } from './routes/auth/invite'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as BackofficeOrganizationsIndexRouteImport } from './routes/backoffice/organizations/index'
+import { Route as BackofficeFeatureFlagsIndexRouteImport } from './routes/backoffice/feature-flags/index'
 import { Route as ApiObservabilityTestIndexRouteImport } from './routes/api/observability-test/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as BackofficeUsersUserIdRouteImport } from './routes/backoffice/users/$userId'
@@ -34,6 +35,7 @@ import { Route as ApiObservabilityTestErrorRouteImport } from './routes/api/obse
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthenticatedSettingsOrganizationRouteImport } from './routes/_authenticated/settings/organization'
 import { Route as AuthenticatedSettingsMembersRouteImport } from './routes/_authenticated/settings/members'
+import { Route as AuthenticatedSettingsBillingRouteImport } from './routes/_authenticated/settings/billing'
 import { Route as AuthenticatedSettingsApiKeysRouteImport } from './routes/_authenticated/settings/api-keys'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedProjectsProjectSlugRouteImport } from './routes/_authenticated/projects/$projectSlug'
@@ -126,6 +128,12 @@ const BackofficeOrganizationsIndexRoute =
     path: '/organizations/',
     getParentRoute: () => BackofficeRouteRoute,
   } as any)
+const BackofficeFeatureFlagsIndexRoute =
+  BackofficeFeatureFlagsIndexRouteImport.update({
+    id: '/feature-flags/',
+    path: '/feature-flags/',
+    getParentRoute: () => BackofficeRouteRoute,
+  } as any)
 const ApiObservabilityTestIndexRoute =
   ApiObservabilityTestIndexRouteImport.update({
     id: '/api/observability-test/',
@@ -176,6 +184,12 @@ const AuthenticatedSettingsMembersRoute =
   AuthenticatedSettingsMembersRouteImport.update({
     id: '/members',
     path: '/members',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsBillingRoute =
+  AuthenticatedSettingsBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
 const AuthenticatedSettingsApiKeysRoute =
@@ -262,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/projects/$projectSlug': typeof AuthenticatedProjectsProjectSlugRouteWithChildren
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/api-keys': typeof AuthenticatedSettingsApiKeysRoute
+  '/settings/billing': typeof AuthenticatedSettingsBillingRoute
   '/settings/members': typeof AuthenticatedSettingsMembersRoute
   '/settings/organization': typeof AuthenticatedSettingsOrganizationRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -271,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/backoffice/users/$userId': typeof BackofficeUsersUserIdRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/api/observability-test/': typeof ApiObservabilityTestIndexRoute
+  '/backoffice/feature-flags/': typeof BackofficeFeatureFlagsIndexRoute
   '/backoffice/organizations/': typeof BackofficeOrganizationsIndexRoute
   '/projects/$projectSlug/onboarding': typeof AuthenticatedProjectsProjectSlugOnboardingRoute
   '/projects/$projectSlug/settings': typeof AuthenticatedProjectsProjectSlugSettingsRoute
@@ -295,6 +311,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeIndexRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/api-keys': typeof AuthenticatedSettingsApiKeysRoute
+  '/settings/billing': typeof AuthenticatedSettingsBillingRoute
   '/settings/members': typeof AuthenticatedSettingsMembersRoute
   '/settings/organization': typeof AuthenticatedSettingsOrganizationRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -304,6 +321,7 @@ export interface FileRoutesByTo {
   '/backoffice/users/$userId': typeof BackofficeUsersUserIdRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/api/observability-test': typeof ApiObservabilityTestIndexRoute
+  '/backoffice/feature-flags': typeof BackofficeFeatureFlagsIndexRoute
   '/backoffice/organizations': typeof BackofficeOrganizationsIndexRoute
   '/projects/$projectSlug/onboarding': typeof AuthenticatedProjectsProjectSlugOnboardingRoute
   '/projects/$projectSlug/settings': typeof AuthenticatedProjectsProjectSlugSettingsRoute
@@ -334,6 +352,7 @@ export interface FileRoutesById {
   '/_authenticated/projects/$projectSlug': typeof AuthenticatedProjectsProjectSlugRouteWithChildren
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/api-keys': typeof AuthenticatedSettingsApiKeysRoute
+  '/_authenticated/settings/billing': typeof AuthenticatedSettingsBillingRoute
   '/_authenticated/settings/members': typeof AuthenticatedSettingsMembersRoute
   '/_authenticated/settings/organization': typeof AuthenticatedSettingsOrganizationRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -343,6 +362,7 @@ export interface FileRoutesById {
   '/backoffice/users/$userId': typeof BackofficeUsersUserIdRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/api/observability-test/': typeof ApiObservabilityTestIndexRoute
+  '/backoffice/feature-flags/': typeof BackofficeFeatureFlagsIndexRoute
   '/backoffice/organizations/': typeof BackofficeOrganizationsIndexRoute
   '/_authenticated/projects/$projectSlug/onboarding': typeof AuthenticatedProjectsProjectSlugOnboardingRoute
   '/_authenticated/projects/$projectSlug/settings': typeof AuthenticatedProjectsProjectSlugSettingsRoute
@@ -373,6 +393,7 @@ export interface FileRouteTypes {
     | '/projects/$projectSlug'
     | '/settings/account'
     | '/settings/api-keys'
+    | '/settings/billing'
     | '/settings/members'
     | '/settings/organization'
     | '/api/auth/$'
@@ -382,6 +403,7 @@ export interface FileRouteTypes {
     | '/backoffice/users/$userId'
     | '/settings/'
     | '/api/observability-test/'
+    | '/backoffice/feature-flags/'
     | '/backoffice/organizations/'
     | '/projects/$projectSlug/onboarding'
     | '/projects/$projectSlug/settings'
@@ -406,6 +428,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/settings/account'
     | '/settings/api-keys'
+    | '/settings/billing'
     | '/settings/members'
     | '/settings/organization'
     | '/api/auth/$'
@@ -415,6 +438,7 @@ export interface FileRouteTypes {
     | '/backoffice/users/$userId'
     | '/settings'
     | '/api/observability-test'
+    | '/backoffice/feature-flags'
     | '/backoffice/organizations'
     | '/projects/$projectSlug/onboarding'
     | '/projects/$projectSlug/settings'
@@ -444,6 +468,7 @@ export interface FileRouteTypes {
     | '/_authenticated/projects/$projectSlug'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/api-keys'
+    | '/_authenticated/settings/billing'
     | '/_authenticated/settings/members'
     | '/_authenticated/settings/organization'
     | '/api/auth/$'
@@ -453,6 +478,7 @@ export interface FileRouteTypes {
     | '/backoffice/users/$userId'
     | '/_authenticated/settings/'
     | '/api/observability-test/'
+    | '/backoffice/feature-flags/'
     | '/backoffice/organizations/'
     | '/_authenticated/projects/$projectSlug/onboarding'
     | '/_authenticated/projects/$projectSlug/settings'
@@ -593,6 +619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackofficeOrganizationsIndexRouteImport
       parentRoute: typeof BackofficeRouteRoute
     }
+    '/backoffice/feature-flags/': {
+      id: '/backoffice/feature-flags/'
+      path: '/feature-flags'
+      fullPath: '/backoffice/feature-flags/'
+      preLoaderRoute: typeof BackofficeFeatureFlagsIndexRouteImport
+      parentRoute: typeof BackofficeRouteRoute
+    }
     '/api/observability-test/': {
       id: '/api/observability-test/'
       path: '/api/observability-test'
@@ -654,6 +687,13 @@ declare module '@tanstack/react-router' {
       path: '/members'
       fullPath: '/settings/members'
       preLoaderRoute: typeof AuthenticatedSettingsMembersRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/billing': {
+      id: '/_authenticated/settings/billing'
+      path: '/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof AuthenticatedSettingsBillingRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
     '/_authenticated/settings/api-keys': {
@@ -742,6 +782,7 @@ interface BackofficeRouteRouteChildren {
   BackofficeOrganizationsOrganizationIdRoute: typeof BackofficeOrganizationsOrganizationIdRoute
   BackofficeProjectsProjectIdRoute: typeof BackofficeProjectsProjectIdRoute
   BackofficeUsersUserIdRoute: typeof BackofficeUsersUserIdRoute
+  BackofficeFeatureFlagsIndexRoute: typeof BackofficeFeatureFlagsIndexRoute
   BackofficeOrganizationsIndexRoute: typeof BackofficeOrganizationsIndexRoute
 }
 
@@ -752,6 +793,7 @@ const BackofficeRouteRouteChildren: BackofficeRouteRouteChildren = {
     BackofficeOrganizationsOrganizationIdRoute,
   BackofficeProjectsProjectIdRoute: BackofficeProjectsProjectIdRoute,
   BackofficeUsersUserIdRoute: BackofficeUsersUserIdRoute,
+  BackofficeFeatureFlagsIndexRoute: BackofficeFeatureFlagsIndexRoute,
   BackofficeOrganizationsIndexRoute: BackofficeOrganizationsIndexRoute,
 }
 
@@ -777,6 +819,7 @@ const DesignSystemRouteRouteWithChildren =
 interface AuthenticatedSettingsRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsApiKeysRoute: typeof AuthenticatedSettingsApiKeysRoute
+  AuthenticatedSettingsBillingRoute: typeof AuthenticatedSettingsBillingRoute
   AuthenticatedSettingsMembersRoute: typeof AuthenticatedSettingsMembersRoute
   AuthenticatedSettingsOrganizationRoute: typeof AuthenticatedSettingsOrganizationRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
@@ -785,6 +828,7 @@ interface AuthenticatedSettingsRouteChildren {
 const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
   AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
   AuthenticatedSettingsApiKeysRoute: AuthenticatedSettingsApiKeysRoute,
+  AuthenticatedSettingsBillingRoute: AuthenticatedSettingsBillingRoute,
   AuthenticatedSettingsMembersRoute: AuthenticatedSettingsMembersRoute,
   AuthenticatedSettingsOrganizationRoute:
     AuthenticatedSettingsOrganizationRoute,

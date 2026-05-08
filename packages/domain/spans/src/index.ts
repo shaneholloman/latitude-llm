@@ -35,6 +35,8 @@ export {
   isLlmCompletionOperation,
   resolveLastLlmCompletionSpanId,
 } from "./helpers/resolve-last-llm-completion-span.ts"
+export { resolveScoreTraceContext } from "./helpers/resolve-score-trace-context.ts"
+export { resolveTraceIdFromRef, type TraceRef, traceRefSchema } from "./helpers/trace-ref.ts"
 export {
   alignUnixSecondsToHistogramBucket,
   denseTraceTimeHistogramBuckets,
@@ -130,6 +132,7 @@ export type { GetTraceCohortSummaryByTagsInput } from "./use-cases/get-trace-coh
 export { getTraceCohortSummaryByTagsUseCase } from "./use-cases/get-trace-cohort-summary-by-tags.ts"
 export type { IngestSpansInput } from "./use-cases/ingest-spans.ts"
 export { ingestSpansUseCase } from "./use-cases/ingest-spans.ts"
+export { ingestSpansWithBillingUseCase } from "./use-cases/ingest-spans-with-billing.ts"
 export type {
   LoadTraceForTraceEndFound,
   LoadTraceForTraceEndResult,
